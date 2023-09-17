@@ -23,9 +23,6 @@ public class StudentExcelExporter {
         sheet = workbook.createSheet("Students");
 
         Row row = sheet.createRow(0);
-        sheet.setDefaultRowHeightInPoints(35);
-        sheet.setDefaultColumnWidth(40);
-
 
         CellStyle style = workbook.createCellStyle();
         XSSFFont font = workbook.createFont();
@@ -41,11 +38,16 @@ public class StudentExcelExporter {
         createCell(row, 5, "Student Phone", style);
         createCell(row, 6, "Student Photo", style);
 
+        // Set row height for header
+        row.setHeightInPoints(75);
 
+        // Set column width for all columns
+        for (int i = 0; i < 7; i++) {
+            sheet.setColumnWidth(i, 40 * 256); // 40 characters wide
+        }
     }
 
     private void createCell(Row row, int columnCount, Object value, CellStyle style) {
-        sheet.autoSizeColumn(columnCount);
         Cell cell = row.createCell(columnCount);
         if (value instanceof Integer) {
             cell.setCellValue((Integer) value);
@@ -78,15 +80,23 @@ public class StudentExcelExporter {
 
             // Add student photo as an image (one line)
             if (student.getStudentPhoto() != null) {
-                addPhotoToCell(student.getStudentPhoto(), sheet, row, columnCount++);
+                addPhotoToCell(student.getStudentPhoto(), row, columnCount++);
+            }
+
+            // Set row height for data rows
+            row.setHeightInPoints(75);
+
+            // Set column width for all columns
+            for (int i = 0; i < 7; i++) {
+                sheet.setColumnWidth(i, 40 * 256); // 40 characters wide
             }
         }
     }
 
-    private void addPhotoToCell(byte[] photoData, XSSFSheet sheet, Row row, int column) {
+    private void addPhotoToCell(byte[] photoData, Row row, int column) {
         int pictureIdx = workbook.addPicture(photoData, Workbook.PICTURE_TYPE_JPEG);
         CreationHelper helper = workbook.getCreationHelper();
-        Drawing<?> drawing = sheet.createDrawingPatriarch();
+        Drawing<?> drawing = row.getSheet().createDrawingPatriarch();
         ClientAnchor anchor = helper.createClientAnchor();
         anchor.setCol1(column);
         anchor.setRow1(row.getRowNum());
@@ -108,7 +118,6 @@ public class StudentExcelExporter {
         // Set the new dimensions
         picture.resize(newWidth, newHeight);
     }
-
 
     public void export(HttpServletResponse response) throws IOException {
         writeHeaderLine();

@@ -27,7 +27,7 @@ FROM student]]>
                 <text><![CDATA[StudentList]]></text>
             </staticText>
         </band>
-    </title>q
+    </title>
     <pageHeader>
         <band height="36" splitType="Stretch">
             <textField pattern="MMMMM dd, yyyy">
