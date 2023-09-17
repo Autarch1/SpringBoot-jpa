@@ -36,7 +36,7 @@ public class CourseController {
             model.addAttribute("blank", "Field Cannot be blank");
             return "courseRegister";
         }
-        if(courseService.isCourseInUSer(cb.getCourseName())){
+        if(courseService.isCourseInUSer(cb.getCourseName().trim())){
             model.addAttribute("sameCourse", "This Course is already exist");
             return "courseRegister";
         }

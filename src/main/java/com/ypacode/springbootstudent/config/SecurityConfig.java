@@ -30,9 +30,9 @@ public class SecurityConfig {
                         authorize
                                 .requestMatchers("/UserRegister", "/ProcessRegister").permitAll()
                                 .requestMatchers("/courseRegister","/ProcessCourseRegister", "/studentRegister", "/StudentRegisterProcess", "/studentList", "/userList","/studentPhoto", "/studentUpdate/**", "/StudentUpdateProcess", "/userUpdate/**", "/UserUpdateProcess"
-                                ,"/disableUser/**","/disableStudent/**").hasRole("ADMIN")
+                                ,"/toggleUserEnabled/**","/disableStudent/**","/jasperpdf/export", "/jasper-pdf/export", "/users/export/excel", "/student/export/excel").hasAnyRole("ADMIN","USER")
                                 .requestMatchers("/studentRegister").hasRole("USER")
-                                .requestMatchers("/", "/userProfile").hasAnyRole("USER", "ADMIN")
+                                .requestMatchers("/", "/profileUpdate", "/profileUpdateProcess").hasAnyRole("USER", "ADMIN")
 
                 ).formLogin(form ->
                         form
@@ -43,7 +43,7 @@ public class SecurityConfig {
                                     // Redirect based on user's role
                                     if (authentication.getAuthorities().stream()
                                             .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_ADMIN"))) {
-                                        response.sendRedirect("/courseRegister");
+                                        response.sendRedirect("/userList");
                                     } else if (authentication.getAuthorities().stream()
                                             .anyMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_USER"))) {
                                         response.sendRedirect("/");
@@ -83,7 +83,7 @@ public class SecurityConfig {
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
         return (web) -> {
-            web.ignoring().requestMatchers("/resources/**"); // Ignore static resources
+            web.ignoring().requestMatchers("/resources/**","/SpringBoot_User.jrxml","/Student.jrxml"); // Ignore static resources
         };
     }
 }

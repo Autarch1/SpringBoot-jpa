@@ -3,6 +3,7 @@ package com.ypacode.springbootstudent.service;
 import com.ypacode.springbootstudent.config.CustomUserDetails;
 import com.ypacode.springbootstudent.model.User;
 import com.ypacode.springbootstudent.repository.UserRepo;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -40,8 +41,10 @@ public class UserService implements UserDetailsService {
             }
         }
 
-    public void delete(String userId){
-        userRepo.deleteById(userId);
+    public void toggleUserEnabled(String userId) {
+        User user = userRepo.findById(userId).orElseThrow(() -> new EntityNotFoundException("User not found"));
+        user.setEnabled(!user.isEnabled()); // Toggle the enabled status
+        userRepo.save(user);
     }
 
     public int update(User user){

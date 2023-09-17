@@ -9,7 +9,6 @@ public class StudentDto {
     private String studentGender;
     private String studentPhone;
     private String studentEducation;
-
     private String[] studentAttend;
 
     public String getStudentId() {

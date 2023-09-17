@@ -12,8 +12,12 @@ public class User {
     @Id
     private String userId;
     private String userName;
+
+    @Column(unique = true)
     private String userEmail;
+
     private String userPassword;
     private String userRole;
+    private boolean enabled = true;
 
 }

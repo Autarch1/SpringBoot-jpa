@@ -4,8 +4,11 @@ import com.ypacode.springbootstudent.dto.StudentDto;
 import com.ypacode.springbootstudent.model.Course;
 import com.ypacode.springbootstudent.model.Student;
 import com.ypacode.springbootstudent.service.CourseService;
+import com.ypacode.springbootstudent.service.ReportService;
 import com.ypacode.springbootstudent.service.StudentService;
+import com.ypacode.springbootstudent.util.StudentExcelExporter;
 import jakarta.servlet.http.HttpServletResponse;
+import net.sf.jasperreports.engine.JRException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -18,8 +21,11 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 @Controller
@@ -28,7 +34,8 @@ public class StudentController {
     private StudentService studentService;
     @Autowired
     private CourseService courseService;
-
+    @Autowired
+    private ReportService reportService;
     @GetMapping(value = "studentRegister")
     public ModelAndView studRegisterView(ModelMap model) {
         Student student = new Student();
@@ -131,8 +138,6 @@ public class StudentController {
     public String updateProcess(@ModelAttribute("updateBean") StudentDto sdto, BindingResult br, ModelMap model,
                                 @RequestParam("studentPhoto") MultipartFile photo) {
 
-        List<Course> courses = courseService.getAllCourses();
-        List<Student> resList = studentService.getAllStudent();
 
         if (sdto.getStudentId().equals("") || sdto.getStudentName().equals("") || sdto.getStudentDob().equals("") ||
                 sdto.getStudentPhone().equals("") || sdto.getStudentEducation().equals("")) {
@@ -141,10 +146,6 @@ public class StudentController {
             return "redirect:/studentUpdate/" + sdto.getStudentId();
         }
 
-//        if (studentService.isPhoneInUse(sdto.getStudentPhone())) {
-//            model.addAttribute("Dup", "This phone Number is already used by other student");
-//            return "redirect:/studentUpdate/" + sdto.getStudentId();
-//        }
 
         Student sb = sdto.convertToStudent();
         Student existingStudent = studentService.getStudentById(sdto.getStudentId());
@@ -188,4 +189,34 @@ public class StudentController {
             return "redirect:/studentList";
 
     }
+
+    @GetMapping(value = "/jasper-pdf/export")
+    public void createPDF(HttpServletResponse response) throws IOException, JRException {
+        response.setContentType("application/pdf");
+        DateFormat dateFormatter = new SimpleDateFormat("yyy-MM-dd:hh:mm:ss");
+        String currentDateTIme = dateFormatter.format(new Date());
+
+        String headerKey = "Content-Disposition";
+        String headerValue ="attachment; filename=pdf_" + currentDateTIme + ".pdf";
+        response.setHeader(headerKey, headerValue);
+        reportService.exportJasperReports(response);
+    }
+
+    @GetMapping("/student/export/excel")
+    public void exportToExcel(HttpServletResponse response) throws IOException {
+        response.setContentType("application/octet-stream");
+        DateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd_HH:mm:ss");
+        String currentDateTime = dateFormatter.format(new Date());
+
+        String headerKey = "Content-Disposition";
+        String headerValue = "attachment; filename=students_" + currentDateTime + ".xlsx";
+        response.setHeader(headerKey, headerValue);
+
+        List<Student> getAllStudent = studentService.getAllStudent();
+
+        StudentExcelExporter excelExporter = new StudentExcelExporter(getAllStudent);
+
+        excelExporter.export(response);
+    }
+
 }

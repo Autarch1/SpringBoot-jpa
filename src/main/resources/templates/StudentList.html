@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <title>Student Search</title>
@@ -10,6 +10,8 @@
           integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9"
           crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twbs-pagination/1.4.2/jquery.twbsPagination.min.js"></script>
+
 
     <style>
         body {
@@ -84,49 +86,16 @@
     </style>
 </head>
 <body>
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top">
-    <div class="container">
-        <a class="navbar-brand" href="#">Student Registration</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
-                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-            <ul class="navbar-nav">
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
-                       aria-expanded="false">
-                        Class Management
-                    </a>
-                    <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" th:href="@{/courseRegister}" > Course Registration</a> </li>
-                        <li><a class="dropdown-item" th:href="@{/studentRegister}" > Student Registration</a> </li>
-                        <li><a class="dropdown-item" th:href="@{/studentList}"> Student Search</a></li>
-                    </ul>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" th:href="@{/userList}">User Management</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#" >UserProfile </a>
-                </li>
-                <li>
-                    <a class="nav-link" th:href="@{/logout}">Logout</a>
-                </li>
-            </ul>
-        </div>
-    </div>
-</nav>
-
-
+<div th:include="NavBar"></div>
 <div class="container">
+    <h1 sec:authentication="principal.username"></h1>
     <form class="search-form">
         <div class="row g-3">
-            <div class="col-md-4">
+            <div class="col-md-2">
                 <input type="text" class="form-control search-input" name="userId" id="studentId"
                        placeholder="Search Student ID" >
             </div>
-            <div class="col-md-4">
+            <div class="col-md-2">
                 <input type="text" class="form-control search-input" name="userName" id="studentName"
                        placeholder="Search Student Name">
             </div>
@@ -135,11 +104,24 @@
                        placeholder="Search Course">
             </div>
             <div class="col-md-2">
+                <a href="/jasper-pdf/export" class="btn btn-success" id="download-pdf-btn">
+                    <i class="fas fa-file-pdf"></i> Download PDF
+                </a>
+            </div>
+
+            <div class="col-md-2">
+                <a href="/student/export/excel" class="btn btn-success" id="download-excel-btn">
+                    <i class="fas fa-file-excel"></i> Download Excel
+                </a>
+            </div>
+            <div class="col-md-2">
                 <button class="btn btn-primary search-btn" id="search-btn">Search</button>
             </div>
         </div>
     </form>
     <table class="table mt-4">
+        <div id="pagination"></div>
+
         <thead>
         <tr>
             <th>Student ID</th>
@@ -175,6 +157,7 @@
         </tbody>
     </table>
     <div id="searchResults"></div>
+
 </div>
 <script>
     $(document).ready(function () {
