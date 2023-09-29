@@ -99,10 +99,11 @@
             <div class="mb-3">
                 <label class="form-label">Attend</label>
                 <div class="form-check d-flex" >
-                    <div th:each="course : ${courses}">
+                    <div th:each="course : ${coursesList}">
                         <div class="form-check-inline">
-                            <label class="form-check-label" th:text="${course.courseName}"></label>
-                            <input type="checkbox" name="studentAttend" th:value="${course.courseId}" class="form-check-input" />
+                            <label class="form-check-label" th:field="*{courses}"  th:text="${course.courseName}"></label>
+                                <input type="checkbox" name="studentAttend" th:value="${course.courseId}" class="form-check-input" />
+
                         </div>
                     </div>
                 </div>

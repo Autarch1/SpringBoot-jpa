@@ -28,11 +28,11 @@ public class SecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((authorize) ->
                         authorize
-                                .requestMatchers("/UserRegister", "/ProcessRegister").permitAll()
+                                .requestMatchers("/UserRegister", "/ProcessRegister", "/verify-otpP").permitAll()
                                 .requestMatchers("/courseRegister","/ProcessCourseRegister", "/studentRegister", "/StudentRegisterProcess", "/studentList", "/userList","/studentPhoto", "/studentUpdate/**", "/StudentUpdateProcess", "/userUpdate/**", "/UserUpdateProcess"
-                                ,"/toggleUserEnabled/**","/disableStudent/**","/jasperpdf/export", "/jasper-pdf/export", "/users/export/excel", "/student/export/excel").hasAnyRole("ADMIN","USER")
+                                ,"/toggleUserEnabled/**","/disableStudent/**","/jasperpdf/export", "/jasper-pdf/export", "/users/export/excel", "/student/export/excel", "/courseList").hasAnyRole("ADMIN","USER")
                                 .requestMatchers("/studentRegister").hasRole("USER")
-                                .requestMatchers("/", "/profileUpdate", "/profileUpdateProcess").hasAnyRole("USER", "ADMIN")
+                                .requestMatchers("/", "/profileUpdate", "/profileUpdateProcess", "/studentRegister", "/StudentRegisterProcess", "/studentList", "/userList").hasAnyRole("USER", "ADMIN")
 
                 ).formLogin(form ->
                         form

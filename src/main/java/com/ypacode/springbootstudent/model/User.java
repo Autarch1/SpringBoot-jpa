@@ -1,9 +1,11 @@
 package com.ypacode.springbootstudent.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.Data;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Entity
@@ -18,6 +20,7 @@ public class User {
 
     private String userPassword;
     private String userRole;
-    private boolean enabled = true;
+    private boolean enabled = false;
+//    private String otp; // Add this field to store OTP
 
 }

@@ -1,7 +1,9 @@
 package com.ypacode.springbootstudent.controller;
 
 import com.ypacode.springbootstudent.model.User;
+import com.ypacode.springbootstudent.service.CourseService;
 import com.ypacode.springbootstudent.service.ReportService;
+import com.ypacode.springbootstudent.service.StudentService;
 import com.ypacode.springbootstudent.service.UserService;
 import com.ypacode.springbootstudent.util.PasswordHash;
 import com.ypacode.springbootstudent.util.UserExcelExporter;
@@ -31,9 +33,25 @@ public class UserController {
     private UserService userService;
     @Autowired
     private ReportService reportService;
-
+    @Autowired
+    private StudentService studentService;
+    @Autowired
+    private CourseService courseService;
     @GetMapping(value = "/")
-    public String welocme() {
+    public String welcome(ModelMap model) {
+        long studentCount = studentService.getAllStudent().size(); // Get student count using StudentService
+        long userCount =userService.getAllUser().size();
+        long courseCount = courseService.getAllCourses().size();
+        model.addAttribute("studentCount", studentCount);
+        model.addAttribute("userCount", userCount);
+        model.addAttribute("courseCount", courseCount);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        if (authentication.isAuthenticated()) {
+            // Get the username from the authentication object
+            String username = authentication.getName();
+            model.addAttribute("username", username);
+        }
         return "Welcome";
     }
 
@@ -90,6 +108,8 @@ public class UserController {
 
         return "redirect:/login";
     }
+
+
 
     @GetMapping(value = "/login")
     public String loginView() {

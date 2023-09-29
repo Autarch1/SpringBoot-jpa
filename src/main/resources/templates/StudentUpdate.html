@@ -57,9 +57,8 @@
         <form th:action="@{/StudentUpdateProcess}" th:object="${updateBean}" enctype="multipart/form-data"
               method="post">
 
-            <div class="mb-3 d-flex justify-content-center">
-                <img th:src="@{/studentPhoto(studentId=${studentId})}" alt="Student Photo" width="200" height="150">Profile
-                Photo
+            <div class="mb-3 d-flex justify-content-center">Profile Photo
+                <img th:src="@{/studentPhoto(studentId=${studentId})}" alt="Student Photo" width="200" height="150">
                 </div>
                 <div class="mb-3">
                     <label for="studentId" class="form-label">Student Id</label>
@@ -117,7 +116,7 @@
                             <div class="form-check-inline">
                                 <label class="form-check-label" th:text="${course.courseName}"></label>
                                 <input type="checkbox" name="studentAttend" th:value="${course.courseId}"
-                                       class="form-check-input"/>
+                                       th:checked="${selectedStudent.courses.contains(course)}" class="form-check-input"/>
                             </div>
                         </div>
                     </div>

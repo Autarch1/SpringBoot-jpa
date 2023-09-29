@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>OTP Verification</title>
+</head>
+<body>
+<h1>OTP Verification</h1>
+<p>Please enter the OTP sent to your email address to verify your account.</p>
+<form action="/verify-otp-process" method="post">
+  <input type="hidden" name="userId" th:value="${userId}" />
+  <label for="otp">Enter OTP:</label>
+  <input type="text" id="otp" name="otp" required />
+  <button type="submit">Verify OTP</button>
+</form>
+
+<!-- Display error message if OTP verification fails -->
+<p th:if="${verificationError}" class="error-message">
+  <span>Error:</span> <span th:text="${verificationError}"></span>
+</p>
+</body>
+</html>

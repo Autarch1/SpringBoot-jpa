@@ -12,6 +12,10 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 @Controller
 public class CourseController {
     @Autowired
@@ -49,4 +53,24 @@ public class CourseController {
 
         return "redirect:/";
     }
+
+
+
+
+    @GetMapping("/courseList")
+    public String showCourseStatistics(ModelMap model) {
+        int topN = 5; // Change this to the desired number of top courses to display
+        List<String> mostPopularCourses = courseService.getMostPopularCourses(topN);
+        Map<String, Long> studentCountMap = courseService.getStudentCountPerCourse();
+
+        // Filter the student count map to include only the top N courses
+        Map<String, Long> topStudentCountMap = mostPopularCourses.stream()
+                .collect(Collectors.toMap(course -> course, studentCountMap::get));
+
+        model.addAttribute("mostPopularCourses", mostPopularCourses);
+        model.addAttribute("studentCountMap", topStudentCountMap);
+        return "CourseList";
+    }
+
+
 }

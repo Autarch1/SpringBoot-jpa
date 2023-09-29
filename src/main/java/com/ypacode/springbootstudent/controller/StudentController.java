@@ -41,7 +41,7 @@ public class StudentController {
         Student student = new Student();
         String nextStudentId = studentService.generateNextStudentId();
         List<Course> courses = courseService.getAllCourses();
-        model.addAttribute("courses", courses);
+        model.addAttribute("coursesList", courses);
         student.setStudentId(nextStudentId);
         return new ModelAndView("StudentRegister", "studentBean", student);
     }
@@ -163,7 +163,7 @@ public class StudentController {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-        
+
         String[] courseIds = sb.getStudentAttend();
         List<Course> selectedCourses = new ArrayList<>();
 

@@ -13,33 +13,35 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
 
+
 @Service
 public class UserService implements UserDetailsService {
 
     private final UserRepo userRepo;
+
     @Autowired
     public UserService(UserRepo userRepo) {
         this.userRepo = userRepo;
     }
 
+    public List<User> getAllUser() {
+        return userRepo.findAll();
+    }
 
-    public List<User> getAllUser(){
-            return userRepo.findAll();
+    public User getUserById(String userId) {
+        return userRepo.findByUserId(userId);
+    }
+
+    public int save(User user) {
+        user.setUserId(generateNextUserId());
+        try {
+            userRepo.save(user);
+            return 1;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 0;
         }
-        public User getUserById(String userId){
-            return userRepo.findByUserId(userId);
-        }
-        public int save(User user){
-            user.setUserId(generateNextUserId());
-            try
-            {
-                userRepo.save(user);
-                return 1;
-            }catch (Exception e){
-                e.printStackTrace();
-                return 0;
-            }
-        }
+    }
 
     public void toggleUserEnabled(String userId) {
         User user = userRepo.findById(userId).orElseThrow(() -> new EntityNotFoundException("User not found"));
@@ -47,11 +49,11 @@ public class UserService implements UserDetailsService {
         userRepo.save(user);
     }
 
-    public int update(User user){
-        try{
+    public int update(User user) {
+        try {
             userRepo.save(user);
             return 1;
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return 0;
         }
@@ -86,4 +88,6 @@ public class UserService implements UserDetailsService {
 
         return new CustomUserDetails(user.get());
     }
+
+
 }

@@ -1,15 +1,51 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8" >
+    <meta charset="UTF-8">
     <title>Welcome</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <style>
+        /* Add custom CSS styles here */
+        .count-box {
+            background-color: #f0f0f0;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
 
-
+        .count-icon {
+            font-size: 48px;
+            color: #007bff; /* Change the color as needed */
+        }
+    </style>
 </head>
 <body>
 <div th:include="NavBar"></div>
+
+<div class="container mt-4">
+    <p>Welcome, <span th:text="${username}"></span>!</p>
+    <div class="row">
+        <div class="col-md-4">
+            <div class="count-box">
+                <i class="fas fa-user-graduate count-icon"></i>
+                <p>Number of Students: <span th:text="${studentCount}"></span></p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="count-box">
+                <i class="fas fa-users count-icon"></i>
+                <p>Number of Users: <span th:text="${userCount}"></span></p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="count-box">
+                <i class="fas fa-book count-icon"></i>
+                <p>Number of Courses: <span th:text="${courseCount}"></span></p>
+            </div>
+        </div>
+    </div>
+</div>
 
 </body>
 </html>
